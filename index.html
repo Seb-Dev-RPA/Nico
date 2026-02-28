@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Fuente romántica -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <title>Para Nicole ❤️</title>
@@ -19,8 +18,11 @@ body{
     overflow:hidden;
 }
 
+/* CONTENIDO PRINCIPAL */
 .contenedor{
     margin-top:60px;
+    position:relative;
+    z-index:2; /* por encima de la lluvia */
 }
 
 h1{
@@ -66,20 +68,39 @@ button{
     margin:10px;
 }
 
+/* CAPA DE LLUVIA */
+#lluvia{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:1; /* detrás del contenido */
+    overflow:hidden;
+}
+
 .emoji{
     position:absolute;
-    pointer-events:none;
     animation: caer linear forwards;
 }
 
 @keyframes caer{
-    from{ transform: translateY(-10vh); opacity:1; }
-    to{ transform: translateY(110vh); opacity:0; }
+    from{
+        transform: translateY(-10vh);
+        opacity:1;
+    }
+    to{
+        transform: translateY(110vh);
+        opacity:0;
+    }
 }
 </style>
 </head>
 
 <body>
+
+<div id="lluvia"></div>
 
 <div class="contenedor">
     <h1>Nicole… 🐱🦫<br>¿Quieres ser mi novia? 💖</h1>
@@ -94,6 +115,7 @@ button{
 <script>
 const botonNo = document.getElementById("no");
 const botonSi = document.getElementById("si");
+const contenedorLluvia = document.getElementById("lluvia");
 
 let escala = 1;
 let lluviaActiva = false;
@@ -118,13 +140,15 @@ botonNo.addEventListener("touchstart", moverBoton);
 botonNo.addEventListener("click", moverBoton);
 
 botonSi.addEventListener("click", function(){
-    document.body.innerHTML = `
-        <h1 style="font-family:'Great Vibes', cursive; font-size:42px; color:#d6336c;">
+
+    document.querySelector(".contenedor").innerHTML = `
+        <h1>
         Sabía que dirías que sí 😍🐱🦫<br>
         Ahora oficialmente eres mi persona favorita 💘</h1>
         <img src="IMG_3408.gif" class="gif-final">
         <img src="IMG_3409.gif" class="gif-final">
     `;
+
     lluviaActiva = true;
     lluviaContinua();
 });
@@ -134,10 +158,12 @@ function crearEmoji(){
     const emoji = document.createElement("div");
     emoji.classList.add("emoji");
     emoji.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+
     emoji.style.left = Math.random()*100 + "vw";
     emoji.style.fontSize = (20 + Math.random()*25) + "px";
     emoji.style.animationDuration = (3 + Math.random()*2) + "s";
-    document.body.appendChild(emoji);
+
+    contenedorLluvia.appendChild(emoji);
 
     setTimeout(() => {
         emoji.remove();
