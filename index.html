@@ -15,10 +15,19 @@ body{
     overflow:hidden;
 }
 
+.contenedor{
+    margin-top:60px;
+}
+
 h1{
-    margin-top:80px;
-    font-size:28px;
+    font-size:26px;
     padding:20px;
+}
+
+.pregunta-gif{
+    width:180px;
+    border-radius:15px;
+    margin-top:10px;
 }
 
 button{
@@ -41,25 +50,22 @@ button{
     position:absolute;
 }
 
-.emoji{
-    position:absolute;
-    font-size:24px;
-    animation: float 6s linear infinite;
-}
-
-@keyframes float{
-    from{ transform: translateY(100vh); }
-    to{ transform: translateY(-10vh); }
+.gif-final{
+    width:150px;
+    margin:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Nicole… 🐱🦫<br>¿Quieres ser mi novia? 💖</h1>
-
-<button id="si">Sí 💕</button>
-<button id="no">No 😢</button>
+<div class="contenedor">
+    <h1>Nicole… 🐱🦫<br>¿Quieres ser mi novia? 💖</h1>
+    <img src="IMG_3410.gif" class="pregunta-gif">
+    <br>
+    <button id="si">Sí 💕</button>
+    <button id="no">No 😢</button>
+</div>
 
 <script>
 const botonNo = document.getElementById("no");
@@ -86,20 +92,10 @@ botonSi.addEventListener("click", function(){
     document.body.innerHTML = `
         <h1>Sabía que dirías que sí 😍🐱🦫<br>
         Ahora oficialmente eres mi persona favorita 💘</h1>
+        <img src="IMG_3408.gif" class="gif-final">
+        <img src="IMG_3409.gif" class="gif-final">
     `;
-    lanzarEmojis();
 });
-
-function lanzarEmojis(){
-    for(let i=0;i<20;i++){
-        const emoji = document.createElement("div");
-        emoji.classList.add("emoji");
-        emoji.innerHTML = ["🐱","🦫","💖","💕"][Math.floor(Math.random()*4)];
-        emoji.style.left = Math.random()*100 + "vw";
-        emoji.style.animationDuration = (3 + Math.random()*3) + "s";
-        document.body.appendChild(emoji);
-    }
-}
 </script>
 
 </body>
