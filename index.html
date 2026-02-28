@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Fuente romántica -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
 <title>Para Nicole ❤️</title>
 
 <style>
@@ -20,8 +24,10 @@ body{
 }
 
 h1{
-    font-size:26px;
+    font-family: 'Great Vibes', cursive;
+    font-size:42px;
     padding:20px;
+    color:#d6336c;
 }
 
 .pregunta-gif{
@@ -62,8 +68,8 @@ button{
 
 .emoji{
     position:absolute;
-    font-size:24px;
-    animation: caer 3s linear forwards;
+    pointer-events:none;
+    animation: caer linear forwards;
 }
 
 @keyframes caer{
@@ -90,6 +96,7 @@ const botonNo = document.getElementById("no");
 const botonSi = document.getElementById("si");
 
 let escala = 1;
+let lluviaActiva = false;
 
 function moverBoton(){
     botonNo.style.position = "absolute";
@@ -112,24 +119,35 @@ botonNo.addEventListener("click", moverBoton);
 
 botonSi.addEventListener("click", function(){
     document.body.innerHTML = `
-        <h1>Sabía que dirías que sí 😍🐱🦫<br>
+        <h1 style="font-family:'Great Vibes', cursive; font-size:42px; color:#d6336c;">
+        Sabía que dirías que sí 😍🐱🦫<br>
         Ahora oficialmente eres mi persona favorita 💘</h1>
         <img src="IMG_3408.gif" class="gif-final">
         <img src="IMG_3409.gif" class="gif-final">
     `;
-    lluviaEmojis();
+    lluviaActiva = true;
+    lluviaContinua();
 });
 
-function lluviaEmojis(){
+function crearEmoji(){
     const emojis = ["🐱","🦫","💖","💕"];
-    for(let i=0;i<40;i++){
-        const emoji = document.createElement("div");
-        emoji.classList.add("emoji");
-        emoji.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-        emoji.style.left = Math.random()*100 + "vw";
-        emoji.style.fontSize = (20 + Math.random()*20) + "px";
-        emoji.style.animationDuration = (2 + Math.random()*2) + "s";
-        document.body.appendChild(emoji);
+    const emoji = document.createElement("div");
+    emoji.classList.add("emoji");
+    emoji.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+    emoji.style.left = Math.random()*100 + "vw";
+    emoji.style.fontSize = (20 + Math.random()*25) + "px";
+    emoji.style.animationDuration = (3 + Math.random()*2) + "s";
+    document.body.appendChild(emoji);
+
+    setTimeout(() => {
+        emoji.remove();
+    }, 5000);
+}
+
+function lluviaContinua(){
+    if(lluviaActiva){
+        crearEmoji();
+        setTimeout(lluviaContinua, 200);
     }
 }
 </script>
