@@ -43,6 +43,7 @@ h1{
     justify-content:center;
     gap:20px;
     margin-top:20px;
+    position:relative;
 }
 
 button{
@@ -61,6 +62,7 @@ button{
 
 #no{
     background:white;
+    position:relative;
 }
 
 .gif-final{
@@ -102,7 +104,6 @@ button{
 
 <div id="lluvia"></div>
 
-<!-- AUDIO -->
 <audio id="musica" src="grand-escape.m4a"></audio>
 
 <div class="contenedor">
@@ -127,8 +128,9 @@ let lluviaActiva = false;
 function moverBoton(){
     botonNo.style.position = "absolute";
 
-    const ancho = window.innerWidth - 100;
-    const alto = window.innerHeight - 50;
+    const rect = botonNo.getBoundingClientRect();
+    const ancho = window.innerWidth - rect.width;
+    const alto = window.innerHeight - rect.height;
 
     const x = Math.random() * ancho;
     const y = Math.random() * alto;
@@ -140,25 +142,45 @@ function moverBoton(){
     botonSi.style.transform = "scale(" + escala + ")";
 }
 
+/* Hover en escritorio */
+botonNo.addEventListener("mouseenter", moverBoton);
+
+/* Touch en móvil */
 botonNo.addEventListener("touchstart", moverBoton);
+
+/* Por si logra hacer click */
 botonNo.addEventListener("click", moverBoton);
 
 botonSi.addEventListener("click", function(){
 
-    // Música
-    musica.volume = 0.6;
-    musica.play();
+    // Vibración en móvil
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
 
-    document.querySelector(".contenedor").innerHTML = `
-        <h1>
-        Sabía que dirías que sí 😍🐱🦫<br>
-        Ahora oficialmente eres mi persona favorita 💘</h1>
-        <img src="IMG_3408.gif" class="gif-final">
-        <img src="IMG_3409.gif" class="gif-final">
-    `;
+    // Efecto dramático
+    botonSi.style.transform = "scale(1.5)";
 
-    lluviaActiva = true;
-    lluviaContinua();
+    setTimeout(() => {
+
+        // Música segura
+        musica.volume = 0.6;
+        musica.play().catch(() => {
+            console.log("Autoplay bloqueado");
+        });
+
+        document.querySelector(".contenedor").innerHTML = `
+            <h1>
+            Sabía que dirías que sí 😍🐱🦫<br>
+            Ahora oficialmente eres mi persona favorita 💘</h1>
+            <img src="IMG_3408.gif" class="gif-final">
+            <img src="IMG_3409.gif" class="gif-final">
+        `;
+
+        lluviaActiva = true;
+        lluviaContinua();
+
+    }, 300);
 });
 
 function crearEmoji(){
