@@ -18,7 +18,6 @@ body{
     overflow:hidden;
 }
 
-/* CONTENIDO PRINCIPAL */
 .contenedor{
     margin-top:60px;
     position:relative;
@@ -44,6 +43,7 @@ h1{
     gap:20px;
     margin-top:20px;
     position:relative;
+    height:120px; /* espacio para que se mueva */
 }
 
 button{
@@ -62,7 +62,7 @@ button{
 
 #no{
     background:white;
-    position:relative;
+    position:absolute;
 }
 
 .gif-final{
@@ -70,7 +70,6 @@ button{
     margin:10px;
 }
 
-/* CAPA LLUVIA */
 #lluvia{
     position:fixed;
     top:0;
@@ -103,14 +102,13 @@ button{
 <body>
 
 <div id="lluvia"></div>
-
 <audio id="musica" src="grand-escape.m4a"></audio>
 
 <div class="contenedor">
     <h1>Nicole… 🐱🦫<br>¿Quieres ser mi novia? 💖</h1>
     <img src="IMG_3410.gif" class="pregunta-gif">
 
-    <div class="botones">
+    <div class="botones" id="zonaBotones">
         <button id="si">Sí 💕</button>
         <button id="no">No 😢</button>
     </div>
@@ -119,21 +117,27 @@ button{
 <script>
 const botonNo = document.getElementById("no");
 const botonSi = document.getElementById("si");
+const zona = document.getElementById("zonaBotones");
 const contenedorLluvia = document.getElementById("lluvia");
 const musica = document.getElementById("musica");
 
 let escala = 1;
 let lluviaActiva = false;
 
+/* Posición inicial centrada */
+botonNo.style.left = "60%";
+botonNo.style.top = "20px";
+
 function moverBoton(){
-    botonNo.style.position = "absolute";
 
-    const rect = botonNo.getBoundingClientRect();
-    const ancho = window.innerWidth - rect.width;
-    const alto = window.innerHeight - rect.height;
+    const zonaRect = zona.getBoundingClientRect();
+    const botonRect = botonNo.getBoundingClientRect();
 
-    const x = Math.random() * ancho;
-    const y = Math.random() * alto;
+    const maxX = zonaRect.width - botonRect.width;
+    const maxY = zonaRect.height - botonRect.height;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
     botonNo.style.left = x + "px";
     botonNo.style.top = y + "px";
@@ -142,32 +146,24 @@ function moverBoton(){
     botonSi.style.transform = "scale(" + escala + ")";
 }
 
-/* Hover en escritorio */
+/* Hover escritorio */
 botonNo.addEventListener("mouseenter", moverBoton);
 
-/* Touch en móvil */
+/* Touch móvil */
 botonNo.addEventListener("touchstart", moverBoton);
 
-/* Por si logra hacer click */
 botonNo.addEventListener("click", moverBoton);
 
 botonSi.addEventListener("click", function(){
 
-    // Vibración en móvil
-    if (navigator.vibrate) {
-        navigator.vibrate(200);
-    }
+    if (navigator.vibrate) navigator.vibrate(200);
 
-    // Efecto dramático
     botonSi.style.transform = "scale(1.5)";
 
     setTimeout(() => {
 
-        // Música segura
         musica.volume = 0.6;
-        musica.play().catch(() => {
-            console.log("Autoplay bloqueado");
-        });
+        musica.play().catch(()=>{});
 
         document.querySelector(".contenedor").innerHTML = `
             <h1>
@@ -195,9 +191,7 @@ function crearEmoji(){
 
     contenedorLluvia.appendChild(emoji);
 
-    setTimeout(() => {
-        emoji.remove();
-    }, 5000);
+    setTimeout(() => emoji.remove(), 5000);
 }
 
 function lluviaContinua(){
