@@ -38,34 +38,30 @@ h1{
 }
 
 .botones{
+    margin-top:20px;
     position:relative;
-    width:300px;
-    height:120px;
-    margin:20px auto;
 }
 
 button{
-    width:120px;              /* 👈 mismo ancho */
+    width:120px;
     padding:15px 0;
     font-size:18px;
     border:none;
     border-radius:12px;
     cursor:pointer;
     transition:0.3s;
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
 }
 
 #si{
     background:#ff4d6d;
     color:white;
-    top:0;
 }
 
 #no{
     background:white;
-    top:60px;
+    position:fixed; /* 👈 ahora se mueve por toda la pantalla */
+    transition:none; /* 👈 sin animación, más rápido */
+    z-index:3;
 }
 
 .gif-final{
@@ -111,7 +107,7 @@ button{
     <h1>Nicole… 🐱🦫<br>¿Quieres ser mi novia? 💖</h1>
     <img src="IMG_3410.gif" class="pregunta-gif">
 
-    <div class="botones" id="zonaBotones">
+    <div class="botones">
         <button id="si">Sí 💕</button>
         <button id="no">No 😢</button>
     </div>
@@ -120,30 +116,36 @@ button{
 <script>
 const botonNo = document.getElementById("no");
 const botonSi = document.getElementById("si");
-const zona = document.getElementById("zonaBotones");
 const contenedorLluvia = document.getElementById("lluvia");
 const musica = document.getElementById("musica");
 
 let escala = 1;
 let lluviaActiva = false;
 
+/* Posición inicial */
+function posicionInicial(){
+    const rect = botonNo.getBoundingClientRect();
+    botonNo.style.left = (window.innerWidth / 2 - rect.width / 2) + "px";
+    botonNo.style.top = (window.innerHeight / 2 + 50) + "px";
+}
+posicionInicial();
+
 function moverBoton(){
 
-    const zonaRect = zona.getBoundingClientRect();
-    const botonRect = botonNo.getBoundingClientRect();
+    const rect = botonNo.getBoundingClientRect();
 
-    const maxX = zonaRect.width - botonRect.width;
-    const maxY = zonaRect.height - botonRect.height;
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
 
     const x = Math.random() * maxX;
     const y = Math.random() * maxY;
 
     botonNo.style.left = x + "px";
     botonNo.style.top = y + "px";
-    botonNo.style.transform = "none";
 
-    escala += 0.1;
-    botonSi.style.transform = "translateX(-50%) scale(" + escala + ")";
+    // Crecimiento del botón Sí
+    escala += 0.15; /* 👈 crece más rápido */
+    botonSi.style.transform = "scale(" + escala + ")";
 }
 
 botonNo.addEventListener("mouseenter", moverBoton);
@@ -154,7 +156,7 @@ botonSi.addEventListener("click", function(){
 
     if (navigator.vibrate) navigator.vibrate(200);
 
-    botonSi.style.transform = "translateX(-50%) scale(1.5)";
+    botonSi.style.transform = "scale(1.5)";
 
     setTimeout(() => {
 
@@ -193,7 +195,7 @@ function crearEmoji(){
 function lluviaContinua(){
     if(lluviaActiva){
         crearEmoji();
-        setTimeout(lluviaContinua, 200);
+        setTimeout(lluviaContinua, 150);
     }
 }
 </script>
